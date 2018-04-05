@@ -2,8 +2,8 @@
 #include <sstream> //ss;
 using namespace std;
 
-const int N = 15;           //rozmiar tablicy;
-const int S_MAX = 15;           //rozmiar stosu-tablicy;
+const int N = 8;           //rozmiar tablicy;
+const int S_MAX = 8;           //rozmiar stosu-tablicy;
 
 int p(char ch)
 {
@@ -22,16 +22,17 @@ int p(char ch)
 
 int main()
 {
-    char c[] = { '(','1', '2', '.','3', '+', '4',')','/','(','s','5',')','^','6' };
+    char c[] = { '-','4', '-', '(','1', '-', '1',')'};
     stringstream *ss;
     ss = new stringstream;
     ss->str( std::string() );
     ss->clear();
     *ss << " ";
     char S[S_MAX];
-    int wsk_s = 0;          //wskaznik stosu;
+    int wsk_s = 0;              //wskaznik stosu;
     float liczba;
-    bool czy_ujemna=false;
+    bool czy_ujemna=false;      //ujemna zmienna;
+    bool czy_uj_nawias=false;   //ujemna zawartosc nawiasu
 
     for(int i=0; i<N; i++)
     {
@@ -43,6 +44,11 @@ int main()
              {
                 case ' ': break;                //ignorowanie spacji;
                 case '(': S[wsk_s++] = '(';     //na stos
+                 if(czy_ujemna)
+                 {
+                     czy_uj_nawias=true;
+                     czy_ujemna=false;
+                 }
                  break;
                 case ')': while (S[wsk_s - 1] != '(')
                  {
@@ -50,8 +56,12 @@ int main()
                      {
                          *ss >> liczba;
 
-                         if (czy_ujemna)
+                         if (czy_ujemna && !czy_uj_nawias)
                              cout << liczba * (-1) << endl;
+                         else if (!czy_ujemna && czy_uj_nawias)
+                             cout << liczba * (-1) << endl;
+                         else if (czy_ujemna && czy_uj_nawias)
+                             cout << liczba << endl;
                          else
                              cout << liczba << endl;
 
@@ -63,7 +73,7 @@ int main()
                      }
                  cout << S[--wsk_s] <<endl;
                  }
-
+                 czy_uj_nawias = false;
                  wsk_s--;
                  break;
                 case '-':
@@ -71,8 +81,12 @@ int main()
                    {
                        *ss >> liczba;
 
-                       if (czy_ujemna)
+                       if (czy_ujemna && !czy_uj_nawias)
                            cout << liczba * (-1) << endl;
+                       else if (!czy_ujemna && czy_uj_nawias)
+                           cout << liczba * (-1) << endl;
+                       else if (czy_ujemna && czy_uj_nawias)
+                           cout << liczba << endl;
                        else
                            cout << liczba << endl;
                            ss = new stringstream;
@@ -81,7 +95,11 @@ int main()
                            *ss << " ";
                     }
                   czy_ujemna = true;
-                  c[i] = '+';
+                  //jezeli stos pusty to nie zamieniać na +, - tylko zmienia charakter zmiennej
+                  if(i==0)
+                      break;
+                  else
+                      c[i] = '+';
                  case '+':;
                  case '*':;
                  case '/':;
@@ -95,10 +113,14 @@ int main()
                          {
                              *ss >> liczba;
 
-                             if (czy_ujemna)
-                                 cout << liczba * (-1) << endl;
-                             else
-                                 cout << liczba << endl;
+                           if (czy_ujemna && !czy_uj_nawias)
+                               cout << liczba * (-1) << endl;
+                           else if (!czy_ujemna && czy_uj_nawias)
+                               cout << liczba * (-1) << endl;
+                           else if (czy_ujemna && czy_uj_nawias)
+                               cout << liczba << endl;
+                           else
+                               cout << liczba << endl;
                              czy_ujemna = false;
                                ss = new stringstream;
                                ss->str( std::string() );
@@ -120,10 +142,14 @@ int main()
       {
           *ss >> liczba;
 
-          if (czy_ujemna)
-              cout << liczba * (-1) << endl;
-          else
-              cout << liczba << endl;
+        if (czy_ujemna && !czy_uj_nawias)
+            cout << liczba * (-1) << endl;
+        else if (!czy_ujemna && czy_uj_nawias)
+            cout << liczba * (-1) << endl;
+        else if (czy_ujemna && czy_uj_nawias)
+            cout << liczba << endl;
+        else
+            cout << liczba << endl;
           czy_ujemna = false;
             ss = new stringstream;
             ss->str( std::string() );
