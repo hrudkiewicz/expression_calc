@@ -1,9 +1,12 @@
 #include <iostream>
 #include <sstream> //ss;
+
+/* w tej wersji mozna przed uruchomieniem programu wprowadzic wyrazenie do tablicy znakow c[], zmieniajac wartosci stalych
+ * program drukuje przetworzone wyrazenie na system ONP */
 using namespace std;
 
-const int N = 8;           //rozmiar tablicy;
-const int S_MAX = 8;           //rozmiar stosu-tablicy;
+const int N = 9;           //rozmiar tablicy;
+const int S_MAX = 9;           //rozmiar stosu-tablicy;
 
 int p(char ch)
 {
@@ -22,7 +25,7 @@ int p(char ch)
 
 int main()
 {
-    char c[] = { '-','4', '-', '(','1', '-', '1',')'};
+    char c[] = { '-','4', '-', '(','-', '1', '+','3',')'};
     stringstream *ss;
     ss = new stringstream;
     ss->str( std::string() );
@@ -30,7 +33,7 @@ int main()
     *ss << " ";
     char S[S_MAX];
     int wsk_s = 0;              //wskaznik stosu;
-    float liczba;
+    string liczba;
     bool czy_ujemna=false;      //ujemna zmienna;
     bool czy_uj_nawias=false;   //ujemna zawartosc nawiasu
 
@@ -57,9 +60,9 @@ int main()
                          *ss >> liczba;
 
                          if (czy_ujemna && !czy_uj_nawias)
-                             cout << liczba * (-1) << endl;
+                             cout << "-" + liczba << endl;
                          else if (!czy_ujemna && czy_uj_nawias)
-                             cout << liczba * (-1) << endl;
+                             cout << "-" + liczba << endl;
                          else if (czy_ujemna && czy_uj_nawias)
                              cout << liczba << endl;
                          else
@@ -82,9 +85,9 @@ int main()
                        *ss >> liczba;
 
                        if (czy_ujemna && !czy_uj_nawias)
-                           cout << liczba * (-1) << endl;
+                           cout << "-" + liczba << endl;
                        else if (!czy_ujemna && czy_uj_nawias)
-                           cout << liczba * (-1) << endl;
+                           cout << "-" + liczba << endl;
                        else if (czy_ujemna && czy_uj_nawias)
                            cout << liczba << endl;
                        else
@@ -96,7 +99,7 @@ int main()
                     }
                   czy_ujemna = true;
                   //jezeli stos pusty to nie zamieniać na +, - tylko zmienia charakter zmiennej
-                  if(i==0)
+                  if(i==0 || c[i-1]=='(')
                       break;
                   else
                       c[i] = '+';
@@ -114,9 +117,9 @@ int main()
                              *ss >> liczba;
 
                            if (czy_ujemna && !czy_uj_nawias)
-                               cout << liczba * (-1) << endl;
+                               cout << "-" + liczba << endl;
                            else if (!czy_ujemna && czy_uj_nawias)
-                               cout << liczba * (-1) << endl;
+                               cout << "-" + liczba << endl;
                            else if (czy_ujemna && czy_uj_nawias)
                                cout << liczba << endl;
                            else
@@ -143,9 +146,9 @@ int main()
           *ss >> liczba;
 
         if (czy_ujemna && !czy_uj_nawias)
-            cout << liczba * (-1) << endl;
+            cout << "-" + liczba << endl;
         else if (!czy_ujemna && czy_uj_nawias)
-            cout << liczba * (-1) << endl;
+            cout <<"-" + liczba << endl;
         else if (czy_ujemna && czy_uj_nawias)
             cout << liczba << endl;
         else
