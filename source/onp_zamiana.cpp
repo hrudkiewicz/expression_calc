@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream> //ss;
 #include "onp_zamiana.h"
+#include "onp_oblicz.h"
 
 /* w tej wersji mozna przed uruchomieniem programu wprowadzic wyrazenie do tablicy znakow c[], zmieniajac wartosci stalych
  * program drukuje przetworzone wyrazenie na system ONP
@@ -30,7 +31,7 @@ int p(char ch)
     return 0;
 }
 
-int onp_zamiana()
+int onp_zamiana(int *wsk)
 {
     char S[S_MAX];              //stos do przechowywania operatorów
     int wsk_s = 0;              //wskaznik stosu operatorow;
@@ -172,6 +173,12 @@ int onp_zamiana()
             *ss << " ";
        }
     while(wsk_s) ONP[wsk_onp++] = S[--wsk_s];
+
+    string *wsk_stos = ONP;      //wskaznik na stos ONP
+  //  int const *wsk_rozm = &S_MAX;   //wskaznik na rozmiar stosu ONP
+//    int *wsk_sOnp = &wsk_onp;       //wskaznik na aktualny wskaznik stosu ONP;
+
+    onp_oblicz(wsk, wsk_stos,/* &S_MAX,*/ &wsk_onp);
 
  //   for (int i=0; i<wsk_onp; i++)             //sprawdzenie czy dobrze umieszczone na stosie
   //  {                                          //UWAGA są odwrotnie na stosie dlatego wywoływane w taki sposób
