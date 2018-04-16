@@ -39,7 +39,8 @@ int onp_zamiana(int *wsk)
     int wsk_onp = 0;              //wskaznik stosu ONP
     string liczba;
     bool czy_ujemna = false;      //ujemna zmienna;
-    char c[] = { '5','-', '(', 's','3','0','+','1',')'};
+    bool czy_try = false;          //trygonometryczne inaczej traktowane w ONP
+    char c[] = { '5','-', '(', 'c','6','0','+','1',')'};
 
     stringstream *ss;
     ss = new stringstream;
@@ -78,6 +79,11 @@ int onp_zamiana(int *wsk)
                           ss->str( std::string() );
                           ss->clear();
                           *ss << " ";
+                          if(czy_try)
+                          {
+                              ONP[wsk_onp++] = S[--wsk_s];
+                              czy_try = false;
+                          }
                      }
                  ONP[wsk_onp++] = S[--wsk_s];
                  }
@@ -97,6 +103,11 @@ int onp_zamiana(int *wsk)
                            ss->str( std::string() );
                            ss->clear();
                            *ss << " ";
+                           if(czy_try)
+                           {
+                               ONP[wsk_onp++] = S[--wsk_s];
+                               czy_try = false;
+                           }
                     }
                   czy_ujemna = true;
                   //jezeli stos pusty to nie zamieniać na +, - tylko zmienia charakter zmiennej
@@ -127,23 +138,30 @@ int onp_zamiana(int *wsk)
                  case 's':;
                  case 'c': while (wsk_s)
                   {
+                     if (ss->str() != " ")
+                       {
+                           *ss >> liczba;
+
+                         if (czy_ujemna)
+                             ONP[wsk_onp++] =("-" + liczba);
+                         else
+                             ONP[wsk_onp++] =liczba;
+                           czy_ujemna = false;
+
+                             ss = new stringstream;
+                             ss->str( std::string() );
+                             ss->clear();
+                             *ss << " ";
+                             if(czy_try)
+                             {
+                                 ONP[wsk_onp++] = S[--wsk_s];
+                                 czy_try = false;
+                             }
+                        }
+
                    if ((p(c[i]) == 4) || (p(c[i]) > p(S[wsk_s - 1])))
                    {
-                       if (ss->str() != " ")
-                         {
-                             *ss >> liczba;
-
-                           if (czy_ujemna)
-                               ONP[wsk_onp++] =("-" + liczba);
-                           else
-                               ONP[wsk_onp++] =liczba;
-                             czy_ujemna = false;
-
-                               ss = new stringstream;
-                               ss->str( std::string() );
-                               ss->clear();
-                               *ss << " ";
-                          }
+                    if(p(c[i]) == 4) czy_try = true;            //jeżeli 4 - cos/sin to inny system w ONP
                    } break;
 
                     ONP[wsk_onp++] = S[--wsk_s];      //drukowanie operatorów o wyzszych priorytetach
@@ -168,6 +186,11 @@ int onp_zamiana(int *wsk)
             ss->str( std::string() );
             ss->clear();
             *ss << " ";
+            if(czy_try)
+            {
+                ONP[wsk_onp++] = S[--wsk_s];
+                czy_try = false;
+            }
        }
     while(wsk_s) ONP[wsk_onp++] = S[--wsk_s];
 
