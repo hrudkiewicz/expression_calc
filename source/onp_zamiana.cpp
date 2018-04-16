@@ -13,7 +13,7 @@
 
 using namespace std;
 
-const int N = 9;           //rozmiar tablicy;
+const int N =9;           //rozmiar tablicy;
 const int S_MAX = 9;       //rozmiar stosu-tablicy;
 
 int p(char ch)
@@ -25,7 +25,7 @@ int p(char ch)
     case '*': return 2;
     case '/': return 2;
     case '^': return 3;
-    case 's': return 4;
+    case 's': return 4;     //sin i cos podawane w stopniach
     case 'c': return 4;
     }
     return 0;
@@ -39,8 +39,7 @@ int onp_zamiana(int *wsk)
     int wsk_onp = 0;              //wskaznik stosu ONP
     string liczba;
     bool czy_ujemna = false;      //ujemna zmienna;
-    bool czy_uj_nawias = false;   //ujemna zawartosc nawiasu
-    char c[] = { '-','4', '-', '(','-', '1', '+','3',')'};
+    char c[] = { '5','-', '(', 's','3','0','+','1',')'};
 
     stringstream *ss;
     ss = new stringstream;
@@ -60,7 +59,6 @@ int onp_zamiana(int *wsk)
                 case '(': S[wsk_s++] = '(';     //na stos i zwiekszenie wsk_s o 1
                  if(czy_ujemna)
                  {
-                     czy_uj_nawias=true;
                      czy_ujemna=false;
                  }
                  break;
@@ -70,12 +68,8 @@ int onp_zamiana(int *wsk)
                      {
                          *ss >> liczba;
 
-                         if (czy_ujemna && !czy_uj_nawias)
+                         if (czy_ujemna)
                              ONP[wsk_onp++] =("-" + liczba);
-                         else if (!czy_ujemna && czy_uj_nawias)
-                             ONP[wsk_onp++] =("-" + liczba);
-                         else if (czy_ujemna && czy_uj_nawias)
-                             ONP[wsk_onp++] =liczba;
                          else
                              ONP[wsk_onp++] =liczba;
 
@@ -87,7 +81,6 @@ int onp_zamiana(int *wsk)
                      }
                  ONP[wsk_onp++] = S[--wsk_s];
                  }
-                 czy_uj_nawias = false;
                  wsk_s--;
                  break;
                 case '-':
@@ -95,12 +88,8 @@ int onp_zamiana(int *wsk)
                    {
                        *ss >> liczba;
 
-                        if (czy_ujemna && !czy_uj_nawias)
+                        if (czy_ujemna)
                             ONP[wsk_onp++] =("-" + liczba);
-                        else if (!czy_ujemna && czy_uj_nawias)
-                            ONP[wsk_onp++] =("-" + liczba);
-                        else if (czy_ujemna && czy_uj_nawias)
-                            ONP[wsk_onp++] =liczba;
                         else
                             ONP[wsk_onp++] =liczba;
 
@@ -112,7 +101,23 @@ int onp_zamiana(int *wsk)
                   czy_ujemna = true;
                   //jezeli stos pusty to nie zamieniać na +, - tylko zmienia charakter zmiennej
                   if(i==0 || c[i-1]=='(')
+                  {
+                     if(c[i+1]=='(')
+                     {
+                       S[wsk_s++] = '*';
+                       ONP[wsk_onp++] = "-1";
+                       czy_ujemna = false;
+                     }
+                     break;
+                   }
+                  else if(c[i+1]=='(')
+                  {
+                      S[wsk_s++] = '+';
+                      S[wsk_s++] = '*';
+                      ONP[wsk_onp++] = "-1";
+                      czy_ujemna = false;
                       break;
+                  }
                   else
                       c[i] = '+';
                  case '+':;
@@ -128,12 +133,8 @@ int onp_zamiana(int *wsk)
                          {
                              *ss >> liczba;
 
-                           if (czy_ujemna && !czy_uj_nawias)
+                           if (czy_ujemna)
                                ONP[wsk_onp++] =("-" + liczba);
-                           else if (!czy_ujemna && czy_uj_nawias)
-                               ONP[wsk_onp++] =("-" + liczba);
-                           else if (czy_ujemna && czy_uj_nawias)
-                               ONP[wsk_onp++] =liczba;
                            else
                                ONP[wsk_onp++] =liczba;
                              czy_ujemna = false;
@@ -158,12 +159,8 @@ int onp_zamiana(int *wsk)
       {
           *ss >> liczba;
 
-        if (czy_ujemna && !czy_uj_nawias)
+        if (czy_ujemna)
             ONP[wsk_onp++] =("-" + liczba);
-        else if (!czy_ujemna && czy_uj_nawias)
-            ONP[wsk_onp++] =("-" + liczba);
-        else if (czy_ujemna && czy_uj_nawias)
-            ONP[wsk_onp++] =liczba;
         else
             ONP[wsk_onp++] =liczba;
           czy_ujemna = false;
@@ -175,15 +172,8 @@ int onp_zamiana(int *wsk)
     while(wsk_s) ONP[wsk_onp++] = S[--wsk_s];
 
     string *wsk_stos = ONP;      //wskaznik na stos ONP
-  //  int const *wsk_rozm = &S_MAX;   //wskaznik na rozmiar stosu ONP
-//    int *wsk_sOnp = &wsk_onp;       //wskaznik na aktualny wskaznik stosu ONP;
 
     onp_oblicz(wsk, wsk_stos,/* &S_MAX,*/ &wsk_onp);
 
- //   for (int i=0; i<wsk_onp; i++)             //sprawdzenie czy dobrze umieszczone na stosie
-  //  {                                          //UWAGA są odwrotnie na stosie dlatego wywoływane w taki sposób
- //       cout << ONP[i] <<endl;
- //   }
-   // while(wsk_onp) cout << ONP[--wsk_onp];
     return 0;
 }
