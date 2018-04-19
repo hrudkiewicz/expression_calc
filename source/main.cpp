@@ -5,7 +5,14 @@ using namespace std;
 
 int main()
 {
-    int *wsk;       //wskaznik na funkcje
-    onp_zamiana(wsk);
+
+    //stałe, potem zamiana na dynamiczne
+    const int N =9;           //rozmiar tablicy;
+   // int const* n = &N;
+
+    char c[] = { '5','-', '(', 's','3','0','-','1',')'};
+    char *wsk_c = c;
+
+    onp_zamiana(wsk_c, N);
     return 0;
 }

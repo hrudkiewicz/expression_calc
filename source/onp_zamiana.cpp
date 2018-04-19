@@ -11,11 +11,6 @@
  * ->drukowanie wyniku
 */
 
-using namespace std;
-
-const int N =9;           //rozmiar tablicy;
-const int S_MAX = 9;       //rozmiar stosu-tablicy;
-
 int p(char ch)
 {
     switch (ch)
@@ -31,30 +26,31 @@ int p(char ch)
     return 0;
 }
 
-int onp_zamiana(int *wsk)
+int onp_zamiana(char *wsk, const int rozmiar)
 {
-    char S[S_MAX];              //stos do przechowywania operatorów
+    //zmienne
+    char S[rozmiar];              //stos do przechowywania operatorów
     int wsk_s = 0;              //wskaznik stosu operatorow;
-    string ONP[S_MAX];            //stos do obliczania ONP
-    int wsk_onp = 0;              //wskaznik stosu ONP
-    string liczba;
-    bool czy_ujemna = false;      //ujemna zmienna;
-    bool czy_try = false;          //trygonometryczne inaczej traktowane w ONP
-    char c[] = { '5','-', '(', 'c','6','0','+','1',')'};
+    string ONP[rozmiar];          //stos do obliczania ONP
+    int wsk_onp = 0;            //wskaznik stosu ONP
+    string liczba;              //zamiana znaków na liczbe w stringu
+    bool czy_ujemna = false;    //ujemna zmienna;
+    bool czy_try = false;       //trygonometryczne inaczej traktowane w ONP
 
+    //strumien
     stringstream *ss;
     ss = new stringstream;
     ss->str( std::string() );
     ss->clear();
     *ss << " ";
 
-    for(int i=0; i<N; i++)
+    for(int i=0; i<rozmiar; i++)
     {
-         if((c[i]>='0' && c[i]<='9') || c[i]=='.')
-           *ss << c[i];
+         if((wsk[i]>='0' && wsk[i]<='9') || wsk[i]=='.')
+           *ss << wsk[i];
          else
          {
-             switch(c[i])
+             switch(wsk[i])
              {
                 case ' ': break;                //ignorowanie spacji;
                 case '(': S[wsk_s++] = '(';     //na stos i zwiekszenie wsk_s o 1
@@ -75,6 +71,7 @@ int onp_zamiana(int *wsk)
                              ONP[wsk_onp++] =liczba;
 
                          czy_ujemna = false;
+                          delete ss;
                           ss = new stringstream;
                           ss->str( std::string() );
                           ss->clear();
@@ -99,6 +96,7 @@ int onp_zamiana(int *wsk)
                         else
                             ONP[wsk_onp++] =liczba;
 
+                           delete ss;
                            ss = new stringstream;
                            ss->str( std::string() );
                            ss->clear();
@@ -111,9 +109,9 @@ int onp_zamiana(int *wsk)
                     }
                   czy_ujemna = true;
                   //jezeli stos pusty to nie zamieniać na +, - tylko zmienia charakter zmiennej
-                  if(i==0 || c[i-1]=='(')
+                  if(i==0 || wsk[i-1]=='(')
                   {
-                     if(c[i+1]=='(')
+                     if(wsk[i+1]=='(')
                      {
                        S[wsk_s++] = '*';
                        ONP[wsk_onp++] = "-1";
@@ -121,7 +119,7 @@ int onp_zamiana(int *wsk)
                      }
                      break;
                    }
-                  else if(c[i+1]=='(')
+                  else if(wsk[i+1]=='(')
                   {
                       S[wsk_s++] = '+';
                       S[wsk_s++] = '*';
@@ -130,7 +128,7 @@ int onp_zamiana(int *wsk)
                       break;
                   }
                   else
-                      c[i] = '+';
+                      wsk[i] = '+';
                  case '+':;
                  case '*':;
                  case '/':;
@@ -148,6 +146,7 @@ int onp_zamiana(int *wsk)
                              ONP[wsk_onp++] =liczba;
                            czy_ujemna = false;
 
+                             delete ss;
                              ss = new stringstream;
                              ss->str( std::string() );
                              ss->clear();
@@ -159,14 +158,14 @@ int onp_zamiana(int *wsk)
                              }
                         }
 
-                   if ((p(c[i]) == 4) || (p(c[i]) > p(S[wsk_s - 1])))
+                   if ((p(wsk[i]) == 4) || (p(wsk[i]) > p(S[wsk_s - 1])))
                    {
-                    if(p(c[i]) == 4) czy_try = true;            //jeżeli 4 - cos/sin to inny system w ONP
+                    if(p(wsk[i]) == 4) czy_try = true;            //jeżeli 4 - cos/sin to inny system w ONP
                    } break;
 
                     ONP[wsk_onp++] = S[--wsk_s];      //drukowanie operatorów o wyzszych priorytetach
                   }
-                   S[wsk_s++] = c[i]; //operator umieszczamy na stosie
+                   S[wsk_s++] = wsk[i]; //operator umieszczamy na stosie
                    break;
                   default:    break;
                }
@@ -182,6 +181,7 @@ int onp_zamiana(int *wsk)
         else
             ONP[wsk_onp++] =liczba;
           czy_ujemna = false;
+            delete ss;
             ss = new stringstream;
             ss->str( std::string() );
             ss->clear();
@@ -193,10 +193,11 @@ int onp_zamiana(int *wsk)
             }
        }
     while(wsk_s) ONP[wsk_onp++] = S[--wsk_s];
+    delete ss;
 
+    //przygotowanie do transportu do oblicz()
     string *wsk_stos = ONP;      //wskaznik na stos ONP
-
-    onp_oblicz(wsk, wsk_stos,/* &S_MAX,*/ &wsk_onp);
+    onp_oblicz(wsk_stos, &wsk_onp);
 
     return 0;
 }

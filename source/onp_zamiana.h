@@ -7,7 +7,6 @@
 
 using namespace std;
 
-int onp_zamiana(int *wsk);
-
+int onp_zamiana(char *wsk, const int rozmiar);
 
 #endif // ONP_ZAMIANA_H

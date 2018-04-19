@@ -12,7 +12,6 @@
 
 using namespace std;
 
-//extern const int S_MAX;       //uwaga, zeby zmienic!!!!!!!!!!!!
-int onp_oblicz(int *wsk, string *wsk_sONP, /*int const *wsk_rozm,*/ int *wsk_o);
+int onp_oblicz(string *wsk_sONP, int *wsk_o);
 
 #endif // ONP_OBLICZ_H

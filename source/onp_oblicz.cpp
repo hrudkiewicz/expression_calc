@@ -5,9 +5,7 @@
 #include "onp_zamiana.h"
 #include "onp_oblicz.h"
 
-//czy dodac PI?
-
-int onp_oblicz(int *wsk, string *wsk_sONP, /*int const *wsk_rozm,*/ int *wsk_o)
+int onp_oblicz(string *wsk_sONP, int *wsk_o)
 {
     double LICZBY[10];   //stos liczb
     int wsk_l = 0;      //wskaznik stosu liczb
